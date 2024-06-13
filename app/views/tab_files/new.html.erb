@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sua Aplicação Rails</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      margin-bottom: 30px;
+    }
+
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+
+    table th {
+      background-color: #f2f2f2;
+      color: #333;
+      font-weight: bold;
+    }
+
+    table tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .total-row {
+      background-color: #f2f2f2;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .flash {
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    .flash.notice {
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+      color: #155724;
+    }
+
+    .flash.alert {
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+      color: #721c24;
+    }
+
+    .btn-submit {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-submit:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Lista de Arquivos TAB</h1>
+
+  <table>
+  <thead>
+    <tr>
+      <th>Purchaser Name</th>
+      <th>Item Description</th>
+      <th>Item Price</th>
+      <th>Purchase Count</th>
+      <th>Merchant Address</th>
+      <th>Merchant Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tab_files.each do |tab_file| %>
+      <tr>
+        <td><%= tab_file.purchaser_name %></td>
+        <td><%= tab_file.item_description %></td>
+        <td><%= number_to_currency(tab_file.item_price) %></td>
+        <td><%= tab_file.purchase_count %></td>
+        <td><%= tab_file.merchant_address %></td>
+        <td><%= tab_file.merchant_name %></td>
+      </tr>
+    <% end %>
+    <tr style="background-color: #f2f2f2;">
+      <td colspan="5"><strong>Total Receita Bruta:</strong></td>
+      <td><%= number_to_currency(@total_revenue) %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= form_with(url: tab_files_path, multipart: true) do |form| %>
+  <div class="field">
+    <%= form.label :file, 'Escolha um arquivo TAB para enviar:' %>
+    <%= form.file_field :file, accept: '.tab', required: true %>
+  </div>
+  
+  <div class="actions">
+    <%= form.submit 'Enviar Arquivo', class: 'btn-submit' %>
+  </div>
+<% end %>
+
+<% flash.each do |type, message| %>
+  <div class="flash <%= type %>">
+    <%= message %>
+  </div>
+<% end %>
+</div>
+
+</body>
+</html>
